@@ -63,7 +63,7 @@ router.delete('/:id', validateUserId, (req, res) => {
       res.status(200).json(req.user);
     })
     .catch(()=>{
-      res.status(500).json({ error: "The post could not be removed." });
+      res.status(500).json({ error: "The user could not be removed." });
     });
 });
 
@@ -72,7 +72,7 @@ router.put('/:id', validateUserId, validateUser, (req, res) => {
     .then(ud=>{
       userDb.getById(req.params.id)
         .then(user=>{
-          res.status(200).json(req.body);
+          res.status(200).json(user);
         })
         .catch(()=>{
           res.status(400).json({ errorMessage: "invalid user id" });    
@@ -84,13 +84,6 @@ router.put('/:id', validateUserId, validateUser, (req, res) => {
 });
 
 //custom middleware
-
-/*
-validateUserId validates the user id on every request that expects a user id parameter
-if the id parameter is valid, store that user object as req.user
-if the id parameter does not match any user id in the database, 
- cancel the request and respond with status 400 and { message: "invalid user id" } 
-*/
 
 function validateUserId(req, res, next) {
   userDb.getById(req.params.id)
@@ -122,7 +115,7 @@ function validatePost(req, res, next) {
     res.status(400).json({ errorMessage: "Missing post data" });
   } else{
     if(!req.body.text){
-      res.status(400).json({ errorMessage: "Please provide a text and user_id" });
+      res.status(400).json({ errorMessage: "Please provide a text" });
     } else {
       next();
     }
